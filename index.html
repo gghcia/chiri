@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiri Churros!</title>
+    <style>
+        /* Base Page Configurations */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #2b221a; /* Kept the exact original dark brown baseline background */
+            color: #e6dcd3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Canvas Context Layer for the Floating Beige Dots */
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none; /* Allows clicks to pass through to items below */
+        }
+
+        /* Top Header Navigation Strip */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end; /* Align top items to the far right since user count is gone */
+            align-items: center;
+            padding: 15px 25px;
+            font-size: 13px;
+            z-index: 2;
+        }
+
+        .top-icons {
+            display: flex;
+            gap: 20px;
+            color: #c4b4a3;
+            cursor: pointer;
+        }
+
+        .top-icons span:hover {
+            color: #d4a373;
+        }
+
+        /* Central Content Container */
+        .main-container {
+            text-align: center;
+            width: 90%;
+            max-width: 650px;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        /* Hides the main dashboard menu smoothly when an app is open */
+        .main-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        /* Main Branding Typography */
+        .brand-title {
+            font-size: 5rem;
+            font-weight: 700;
+            color: #dfcbb5;
+            margin-bottom: 2px;
+            letter-spacing: -1px;
+        }
+
+        .brand-subtitle {
+            font-size: 0.95rem;
+            color: #a89685;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Interactive Search Engine Box */
+        .search-box {
+            position: relative;
+            margin-bottom: 35px;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: rgba(61, 49, 39, 0.6);
+            border: 1px solid rgba(212, 163, 115, 0.2);
+            border-radius: 30px;
+            color: #f5efe9;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .search-box input:focus {
+            background-color: rgba(74, 60, 48, 0.8);
+            border-color: rgba(212, 163, 115, 0.6);
+            box-shadow: 0 0 15px rgba(212, 163, 115, 0.15);
+        }
+
+        .search-box input::placeholder {
+            color: #8c7b6c;
+        }
+
+        /* Application Grid Layout */
+        .app-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background-color: rgba(61, 49, 39, 0.5);
+            border: 1px solid rgba(212, 163, 115, 0.1);
+            border-radius: 16px;
+            width: 76px;
+            height: 76px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+            backdrop-filter: blur(5px);
+        }
+
+        .app-card:hover {
+            background-color: rgba(212, 163, 115, 0.15);
+            border-color: rgba(212, 163, 115, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .app-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+            color: #d4a373;
+        }
+
+        .app-label {
+            font-size: 11px;
+            color: #c4b4a3;
+            font-weight: 500;
+        }
+
+        /* Stealth Proxy Display Viewer Window Wrapper */
+        .game-frame-container {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            right: 0;
+            bottom: 40px;
+            z-index: 4;
+            display: none;
+            background-color: #1a1410;
+            border-radius: 12px 0 0 12px;
+            border: 1px solid rgba(212, 163, 115, 0.15);
+            overflow: hidden;
+        }
+
+        .game-frame-container.active {
+            display: block;
+        }
+
+        .game-frame-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer Bottom Bar Componentry */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 25px;
+            font-size: 12px;
+            z-index: 2;
+        }
+
+        .live-clock {
+            color: #a89685;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Left-side Vertical Utility Bar */
+        .side-bar {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding-left: 20px;
+            z-index: 5;
+        }
+
+        .side-bar span {
+            color: #8c7b6c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .side-bar span:hover {
+            color: #dfcbb5;
+            transform: scale(1.25) translateX(4px);
+            filter: drop-shadow(0 0 8px rgba(223, 203, 181, 0.6));
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Side Menu Controls (🏠 drops proxy cache and restores central dashboard) -->
+    <div class="side-bar">
+        <span>⚙️</span>
+        <span id="homeBtn">🏠</span> 
+        <span>👤</span>
+    </div>
+
+    <div class="top-nav">
+        <div class="top-icons">
+            <span>🛠️</span>
+            <span>➕</span>
+            <span>📺</span>
+            <span>💬</span>
+            <span>🚪</span>
+        </div>
+    </div>
+
+    <!-- The Stealth Window Container where your proxy files will display targets -->
+    <div class="game-frame-container" id="gameFrameContainer">
+        <iframe src="" id="gameIframe"></iframe>
+    </div>
+
+    <!-- Primary Hub Panel -->
+    <div class="main-container" id="mainDashboard">
+        <div class="brand-title">chiri</div>
+        <div class="brand-subtitle">ay we studying</div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="search or enter url..." autocomplete="off">
+        </div>
+
+        <!-- Proxy-Mapped Application Matrix links -->
+        <div class="app-grid">
+            <a href="games/study.html" class="app-card">
+                <div class="app-icon">📚</div>
+                <div class="app-label">study</div>
+            </a>
+            <a href="games/movies.html" class="app-card">
+                <div class="app-icon">🎬</div>
+                <div class="app-label">movies</div>
+            </a>
+            <a href="games/anime.html" class="app-card">
+                <div class="app-icon">🎌</div>
+                <div class="app-label">anime</div>
+            </a>
+            <a href="games/music.html" class="app-card">
+                <div class="app-icon">🎵</div>
+                <div class="app-label">music</div>
+            </a>
+            <a href="games/tiktok.html" class="app-card">
+                <div class="app-icon">🎵</div>
+                <div class="app-label">tiktok</div>
+            </a>
+            <a href="games/all.html" class="app-card">
+                <div class="app-icon">⣿</div>
+                <div class="app-label">all apps</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="live-clock" id="clockDisplay">00:00:00 PM</div>
+    </div>
+
+    <script>
+        // System Clock Functionality
+        function updateSystemClock() {
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            document.getElementById('clockDisplay').textContent = new Date().toLocaleTimeString('en-US', timeOptions);
+        }
+        setInterval(updateSystemClock, 1000);
+        updateSystemClock();
+
+        const searchInput = document.getElementById('searchInput');
+        const appRoutes = {
+            study: 'games/study.html',
+            movies: 'games/movies.html',
+            anime: 'games/anime.html',
+            music: 'games/music.html',
+            tiktok: 'games/tiktok.html',
+            all: 'games/all.html',
+            allapps: 'games/all.html',
+            'all apps': 'games/all.html'
+        };
+
+        function handleSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            const normalized = query.toLowerCase();
+            if (appRoutes[normalized]) {
+                window.location.href = appRoutes[normalized];
+                return;
+            }
+
+            if (/^https?:\/\//i.test(query)) {
+                window.location.href = query;
+                return;
+            }
+
+            window.location.href = 'games/all.html?query=' + encodeURIComponent(query);
+        }
+
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        // Canvas Particle Generator Script
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        const numberOfParticles = 45;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.4 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+
+                this.draw();
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(223, 203, 181, ${this.opacity})`;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach((particle) => particle.update());
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
+
