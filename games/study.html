@@ -1,46 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chiri | Study</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #2b221a, #4a362b);
-      color: #f3e7dc;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-    }
-    .panel {
-      background: rgba(86, 66, 53, 0.7);
-      border: 1px solid rgba(212, 163, 115, 0.35);
-      border-radius: 18px;
-      padding: 32px 40px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.2);
-      text-align: center;
-      max-width: 560px;
-    }
-    h1 { margin: 0 0 14px; }
-    p { margin: 0 0 18px; color: #d6c0ad; }
-    a {
-      display: inline-block;
-      text-decoration: none;
-      color: #2b221a;
-      background: #d4a373;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiri | Study Center</title>
+    <style>
+        /* Base Configurations */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a1410; /* Sleek ultra-dark brown match */
+            color: #e6dcd3;
+            min-height: 100vh;
+            padding: 20px 40px;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar Navigation Dashboard Layout */
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(212, 163, 115, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title-area h1 {
+            font-size: 24px;
+            color: #dfcbb5;
+            font-weight: 600;
+        }
+
+        .back-hub-btn {
+            text-decoration: none;
+            color: #8c7b6c;
+            font-size: 13px;
+            border: 1px solid rgba(212, 163, 115, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .back-hub-btn:hover {
+            background-color: rgba(212, 163, 115, 0.15);
+            color: #dfcbb5;
+        }
+
+        /* Responsive Matrix Card Layout Grid Engine */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); /* Automatically tiles row arrays based on screen size */
+            gap: 14px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Individual Content Card Item Modules */
+        .matrix-card {
+            background-color: rgba(61, 49, 39, 0.4);
+            border: 1px solid rgba(212, 163, 115, 0.08);
+            border-radius: 12px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Card Hover Micro-interactions */
+        .matrix-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 163, 115, 0.35);
+            background-color: rgba(61, 49, 39, 0.7);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Embedded Graphical Card Background Previews */
+        .card-bg-render {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35; /* Dims image to ensure text overlay remains readable */
+            z-index: 1;
+            transition: opacity 0.2s;
+        }
+
+        .matrix-card:hover .card-bg-render {
+            opacity: 0.55; /* Brightens graphic on hover focus */
+        }
+
+        /* Text Labels Overlays */
+        .card-label {
+            position: relative;
+            z-index: 2;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #f5efe9;
+            text-align: center;
+            margin-top: auto; /* Aligns text cleanly to the bottom container border edge */
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Smart crops overly long titles gracefully */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); /* Ensures absolute readability over graphics */
+        }
+    </style>
 </head>
 <body>
-  <div class="panel">
-    <h1>Study mode</h1>
-    <p>This page is ready for your study tools, notes, or resources.</p>
-    <a href="../index.html">Back home</a>
-  </div>
+
+    <!-- Header Navigation Section Bar -->
+    <div class="header-nav">
+        <div class="header-title-area">
+            <h1>study hub</h1>
+            <a href="../index.html" class="back-hub-btn">← Back</a>
+        </div>
+    </div>
+
+    <!-- Application Dashboard Matrix Container -->
+    <div class="matrix-grid">
+
+        <!-- Card Module Item Example: Local relative file path navigation -->
+        <a href="slope/index.html" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="slope">
+            <div class="card-label">slope</div>
+        </a>
+
+        <!-- Card Module Item Example: External unblocked absolute network url -->
+        <a href="https://example-unblocked-game.com" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="run 3">
+            <div class="card-label">run 3</div>
+        </a>
+
+        <a href="subway/index.html" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="subway surfers">
+            <div class="card-label">subway surfers</div>
+        </a>
+
+        <a href="retro-bowl/index.html" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="retro bowl">
+            <div class="card-label">retro bowl</div>
+        </a>
+
+        <a href="tetris/index.html" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="tetris">
+            <div class="card-label">tetris</div>
+        </a>
+
+        <a href="cookie/index.html" class="matrix-card">
+            <img src="https://unsplash.com" class="card-bg-render" alt="cookie clicker">
+            <div class="card-label">cookie clicker</div>
+        </a>
+
+        <!-- Add as many target links matching this format block structure as you want! -->
+
+    </div>
+
 </body>
 </html>
