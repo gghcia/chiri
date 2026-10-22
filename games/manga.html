@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiri | Manga</title>
+   <link rel="icon" type="image/png" href="../assets/miafeyicon.png">
+  <style>
+    /* Reset borders and match background settings */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: #2b221a;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      overflow: hidden; /* Stops double scrollbars from forming */
+      position: relative;
+    }
+
+    /* Floating control bar to allow returning to the home screen */
+    .nav-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 999;
+    }
+
+    .nav-overlay a {
+      text-decoration: none;
+      color: #dfcbb5;
+      background: rgba(43, 34, 26, 0.85);
+      border: 1px solid rgba(212, 163, 115, 0.3);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      backdrop-filter: blur(5px);
+      transition: all 0.2s ease;
+    }
+
+    .nav-overlay a:hover {
+      background: #d4a373;
+      color: #2b221a;
+      border-color: #d4a373;
+    }
+
+    /* Full view portal wrapper */
+    .frame-wrapper {
+      width: 100%;
+      height: 100vh;
+      border: none;
+    }
+
+    .frame-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden utility control button to let you escape back to the dashboard panel -->
+  <div class="nav-overlay">
+    <a href="../index.html">← Back!</a>
+  </div>
+
+  <!-- The embed container reading your targeted website parameter links directly -->
+  <div class="frame-wrapper">
+    <iframe src="https://atsu.moe/" id="mangaViewer"></iframe>
+  </div>
+
+</body>
+</html>

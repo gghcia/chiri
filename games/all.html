@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chiri | All Apps</title>
+  <link rel="icon" type="image/png" href="../assets/miafeyicon.png">
+
+  <!-- Lucide Icons for the exact look -->
+  <script src="https://unpkg.com"></script>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -13,41 +23,275 @@
       background: linear-gradient(135deg, #2b221a, #4a362b);
       color: #f3e7dc;
       font-family: 'Segoe UI', Tahoma, sans-serif;
+      overflow: hidden;
+      position: relative;
     }
+
+    /* Particle Background Canvas */
+    #particles-js {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      display: block;
+    }
+
     .panel {
-      background: rgba(86, 66, 53, 0.7);
+      position: relative;
+      z-index: 2;
+      background: rgba(86, 66, 53, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(212, 163, 115, 0.35);
       border-radius: 18px;
-      padding: 32px 40px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.2);
-      text-align: center;
-      max-width: 560px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.3);
     }
-    h1 { margin: 0 0 14px; }
-    p { margin: 0 0 18px; color: #d6c0ad; }
-    a {
-      display: inline-block;
+
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+
+    /* 2-Column Grid Layout for Main Apps */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .app-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       text-decoration: none;
-      color: #2b221a;
-      background: #d4a373;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 700;
+      color: #f3e7dc;
+      padding: 10px 14px;
+      border-radius: 8px;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .app-item:hover {
+      background: rgba(212, 163, 115, 0.15);
+    }
+
+    .app-item:active {
+      transform: scale(0.98);
+    }
+
+    .app-item i, .app-item svg {
+      width: 18px;
+      height: 18px;
+      color: #f3e7dc;
+    }
+
+    .app-item span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Full-Width Container pulling elements significantly further left */
+    .stretched-row {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stretched-row .app-item {
+      width: 100%;
+      justify-content: center;
+      gap: 8px;
+      margin-left: -52px; /* Increased shift back to correct visual positioning */
+    }
+
+    /* Footer Navigation Link */
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid rgba(212, 163, 115, 0.2);
+      padding-top: 16px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #d6c0ad;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover {
+      color: #f3e7dc;
+    }
+
+    /* Message when search finds nothing */
+    .no-results {
+      grid-column: span 2;
+      text-align: center;
+      color: #d6c0ad;
+      font-size: 0.9rem;
+      padding: 12px 0;
+      display: none;
     }
   </style>
 </head>
 <body>
+
+  <!-- Canvas element for floating particle animations -->
+  <canvas id="particles-js"></canvas>
+
   <div class="panel">
-    <h1>All apps</h1>
-    <p id="search-result">This page is a central hub for your apps and searches.</p>
-    <a href="../index.html">Back home</a>
+    <h1 id="panel-title">all apps</h1>
+    
+    <!-- Even 2-column grid layout for core pairs -->
+    <div class="apps-grid" id="apps-grid">
+      <!-- App Item 1 -->
+      <a href="study.html" class="app-item" data-name="study">
+        <i data-lucide="gamepad-2"></i>
+        <span>study</span>
+      </a>
+
+      <!-- App Item 2 -->
+      <a href="movies.html" class="app-item" data-name="movies">
+        <i data-lucide="clapperboard"></i>
+        <span>movies</span>
+      </a>
+
+      <!-- App Item 3 -->
+      <a href="manga.html" class="app-item" data-name="manga">
+        <i data-lucide="book-open"></i>
+        <span>manga</span>
+      </a>
+
+      <!-- App Item 4 -->
+      <a href="anime.html" class="app-item" data-name="anime">
+        <i data-lucide="tv-2"></i>
+        <span>anime</span>
+      </a>
+
+      <div class="no-results" id="no-results">No apps found matching that search.</div>
+    </div>
+
+    <!-- Shift-corrected Full-Width Stretched Container -->
+    <div class="stretched-row" id="stretched-row">
+      <a href="credits.html" class="app-item" data-name="credits">
+        <i data-lucide="heart"></i>
+        <span>credits</span>
+      </a>
+    </div>
+
+    <div class="footer-nav">
+      <a href="../index.html" class="back-btn">Back home</a>
+    </div>
   </div>
+
   <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // --- Lightweight Canvas Particle Background Script ---
+    const canvas = document.getElementById('particles-js');
+    const ctx = canvas.getContext('2d');
+
+    let particlesArray = [];
+    const numberOfParticles = 50; 
+
+    function setCanvasSize() {
+      canvas.width = window.innerWidth || document.documentElement.clientWidth;
+      canvas.height = window.innerHeight || document.documentElement.clientHeight;
+    }
+    setCanvasSize();
+    window.addEventListener('resize', () => {
+      setCanvasSize();
+      initParticles(); 
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1.5; 
+        this.speedX = (Math.random() * 0.6) - 0.3; 
+        this.speedY = (Math.random() * 0.6) - 0.3;
+        this.alpha = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+      }
+      draw() {
+        ctx.fillStyle = `rgba(212, 163, 115, ${this.alpha})`; 
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    // --- Live URL Search Filter System ---
     const params = new URLSearchParams(window.location.search);
     const query = params.get('query');
-    const result = document.getElementById('search-result');
+    
     if (query) {
-      result.textContent = 'Search: ' + query;
+      const cleanQuery = query.toLowerCase().trim();
+      const appItems = document.querySelectorAll('.app-item');
+      let visibleCount = 0;
+
+      document.getElementById('panel-title').textContent = `search: ${query}`;
+
+      appItems.forEach(item => {
+        const appName = item.getAttribute('data-name').toLowerCase();
+        if (appName.includes(cleanQuery)) {
+          item.style.display = 'flex';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      const creditsItem = document.querySelector('.stretched-row .app-item');
+      const stretchedRow = document.getElementById('stretched-row');
+      if (creditsItem.style.display === 'none') {
+        stretchedRow.style.display = 'none';
+      } else {
+        stretchedRow.style.display = 'flex';
+      }
+
+      if (visibleCount === 0) {
+        document.getElementById('no-results').style.display = 'block';
+      }
     }
   </script>
 </body>
