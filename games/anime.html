@@ -4,25 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chiri | Anime</title>
-   <link rel="icon" type="image/png" href="../assets/miafeyicon.png">
+  <link rel="icon" type="image/png" href="../assets/miafeyicon.png">
   <style>
     /* Reset borders and match background settings */
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: #2b221a;
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      overflow: hidden; /* Stops double scrollbars from forming */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      overflow-y: auto;   /* Allow scrolling down long pages */
       position: relative;
     }
 
     /* Floating control bar to allow returning to the home screen */
     .nav-overlay {
-      position: absolute;
+      position: fixed; /* Changed to fixed so it stays visible while scrolling content */
       top: 15px;
       left: 15px;
-      z-index: 999;
+      z-index: 9999;
     }
 
     .nav-overlay a {
@@ -44,17 +45,20 @@
       border-color: #d4a373;
     }
 
-    /* Full view portal wrapper */
+    /* Full view portal wrapper mimicking the iframe container sizing */
     .frame-wrapper {
       width: 100%;
-      height: 100vh;
-      border: none;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding-top: 60px; /* Gives room for the fixed "Back" button */
     }
 
-    .frame-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    /* Loading text style to look tidy while grabbing the external website code */
+    .status-msg {
+      text-align: center;
+      padding: 100px 20px;
+      color: #dfcbb5;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -65,10 +69,68 @@
     <a href="../index.html">← Back!</a>
   </div>
 
-  <!-- The embed container reading your targeted website parameter links directly -->
-  <div class="frame-wrapper">
-    <iframe src="https://www.animegg.org/frame" id="animeViewer"></iframe>
+  <!-- Instead of a broken iframe, this container receives the parsed site content -->
+  <div class="frame-wrapper" id="animeContentContainer">
+    <div class="status-msg">Loading layout content safely...</div>
   </div>
+
+  <script>
+    async function loadEmbeddedSite() {
+      const container = document.getElementById('animeContentContainer');
+      const targetUrl = "https://www.animegg.org/frame";
+
+      try {
+        // Bypasses the iframe connection restrictions using an open web wrapper proxy
+        const proxyUrl = `https://allorigins.win{encodeURIComponent(targetUrl)}`;
+        
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Could not reach proxy wrapper network.');
+        
+        const data = await response.json();
+        const rawHtml = data.contents;
+
+        // Turn the raw text string into a virtual webpage structure we can edit
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml, 'text/html');
+
+        // Extract the base origin URL so we can fix any relative paths
+        const urlObj = new URL(targetUrl);
+        const baseUrl = urlObj.origin;
+
+        // Auto-fix loop utility to turn relative paths (/assets/img.png) into full links
+        const cleanPaths = (tagName, attributeName) => {
+          doc.querySelectorAll(tagName).forEach(element => {
+            let value = element.getAttribute(attributeName);
+            if (value && !value.startsWith('http') && !value.startsWith('data:') && !value.startsWith('//')) {
+              element.setAttribute(attributeName, value.startsWith('/') ? baseUrl + value : baseUrl + '/' + value);
+            }
+          });
+        };
+
+        cleanPaths('img', 'src');
+        cleanPaths('link', 'href');
+        cleanPaths('script', 'src');
+        cleanPaths('a', 'href');
+
+        // Clean out background overwrites inside the site's default styles to maintain your dark layout
+        doc.querySelectorAll('style').forEach(styleBlock => {
+          if (styleBlock.innerHTML.includes('background')) {
+            styleBlock.innerHTML = styleBlock.innerHTML.replace(/background(-color)?\s*:\s*[^;]+;/gi, '');
+          }
+        });
+
+        // Inject the newly fixed content into your main panel container
+        container.innerHTML = doc.body.innerHTML;
+
+      } catch (error) {
+        console.error('Proxy loading failure:', error);
+        container.innerHTML = `<div class="status-msg" style="color: #ff4d4d;">Error: Unable to fetch page layouts over GitHub Pages (${error.message})</div>`;
+      }
+    }
+
+    // Fire the function automatically as soon as the DOM finishes building
+    document.addEventListener('DOMContentLoaded', loadEmbeddedSite);
+  </script>
 
 </body>
 </html>
