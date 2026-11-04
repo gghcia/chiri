@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiri | Credits</title>
+  <link rel="icon" type="image/png" href="../assets/miafeyicon.png">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #110f0e; /* Matte dark background matching the image style */
+      color: #f3e7dc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      position: relative;
+      padding: 40px;
+    }
+
+    /* Particle Background Canvas */
+    #particles-js {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Main Desktop Horizontal Panel Layout */
+    .panel {
+      position: relative;
+      z-index: 2;
+      background: #161412;
+      border: 1px solid rgba(212, 163, 115, 0.15);
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 1100px; /* Wide desktop container */
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 3-Column Horizontal Grid for Content */
+    .horizontal-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr; /* Profile column slightly wider */
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Common Card Section Styling */
+    .section-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #837264;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(212, 163, 115, 0.1);
+      padding-bottom: 6px;
+    }
+
+    /* ================= LEFT COLUMN: PROFILE & ABOUT ================= */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 4px;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid rgba(212, 163, 115, 0.2);
+      background: #2b221a;
+    }
+
+    .profile-meta h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #f3e7dc;
+    }
+
+    .profile-meta .pronouns {
+      font-size: 0.85rem;
+      color: #a39181;
+    }
+
+    .status-indicator {
+      font-size: 0.8rem;
+      color: #8c8279;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #8c8279;
+      border-radius: 50%;
+    }
+
+    .bio-text {
+      font-size: 0.9rem;
+      color: #d6c0ad;
+      line-height: 1.5;
+    }
+
+    /* Skill/Interest Tags */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      background: rgba(212, 163, 115, 0.08);
+      border: 1px solid rgba(212, 163, 115, 0.15);
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: #d4a373;
+    }
+
+    /* ================= MIDDLE COLUMN: SOCIALS ================= */
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px;
+      border-bottom: 1px dashed rgba(212, 163, 115, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .list-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f3e7dc;
+    }
+
+    .list-item-left i, .list-item-left svg {
+      width: 16px;
+      height: 16px;
+      color: #d4a373;
+    }
+
+    .list-item-right {
+      color: #a39181;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .list-item-right:hover {
+      color: #f3e7dc;
+    }
+
+    /* ================= RIGHT COLUMN: FRIENDS ================= */
+    .friend-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d6c0ad;
+      text-decoration: none;
+      padding: 8px 4px;
+      font-size: 0.95rem;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .friend-link:hover {
+      color: #f3e7dc;
+      padding-left: 8px;
+    }
+
+    /* ================= FOOTER BUTTON ================= */
+    .footer-nav {
+      display: flex;
+      justify-content: flex-end;
+      border-top: 1px solid rgba(212, 163, 115, 0.1);
+      padding-top: 16px;
+      margin-top: 8px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #837264;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-btn:hover {
+      color: #f3e7dc;
+    }
+
+    /* Responsive fall-back for smaller viewports */
+    @media (max-width: 850px) {
+      body { overflow-y: auto; }
+      .horizontal-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas for background animations -->
+  <canvas id="particles-js"></canvas>
+
+  <div class="panel">
+    <div class="horizontal-grid">
+      
+      <!-- 1. ABOUT & BIO COLUMN -->
+      <div class="section-box">
+        <span class="section-title">about</span>
+        
+        <div class="profile-header">
+          <!-- Replace source asset when ready -->
+          <img class="avatar" src="../assets/apolloboi.png" alt="Its a picture of Apollo Justice holding a gun im so sorry if the image doesnt load and ur js reading this bs">
+          <div class="profile-meta">
+            <h2>grace BOIII im so effing sorry</h2>
+            <div class="pronouns"><she/her></div>
+            <div class="status-indicator">
+              <div class="status-dot"></div>
+              <span>boi i aint doing allat</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="bio-text">
+          i like coding websites, and i like weezer.
+        </p>
+
+        <div class="tags-container">
+          <span class="tag">web dev</span>
+          <span class="tag">ui design</span>
+          <span class="tag">assets</span>
+          <span class="tag">gaming</span>
+        </div>
+      </div>
+
+      <!-- 2. SOCIALS COLUMN -->
+      <div class="section-box">
+        <span class="section-title">socials</span>
+        
+        <div class="socials-list">
+          <div class="list-item">
+            <div class="list-item-left"><i data-lucide="brand-tiktok"></i><span>tiktok</span></div>
+            <a href="#" class="list-item-right">@peteyssecretlab</a>
+          </div>
+          <div class="list-item">
+            <div class="list-item-left"><i data-lucide="message-square"></i><span>discord</span></div>
+            <a href="#" class="list-item-right">profile</a>
+          </div>
+          <div class="list-item">
+            <div class="list-item-left"><i data-lucide="youtube"></i><span>youtube</span></div>
+            <a href="#" class="list-item-right">@chiri-dev</a>
+          </div>
+          <div class="list-item">
+            <div class="list-item-left"><i data-lucide="github"></i><span>github</span></div>
+            <a href="#" class="list-item-right">chiri-git</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. FRIENDS COLUMN -->
+      <div class="section-box">
+        <span class="section-title">friends</span>
+        
+        <div class="friends-list">
+          <a href="#" class="friend-link">Koya aka NaturalKit</a>
+          <a href="#" class="friend-link">Seer</a>
+          <a href="#" class="friend-link">Briana my Queen</a>
+          <a href="#" class="friend-link">Empty Space I js want more stuff on this page im so effing sorry bro</a>
+          <a href="#" class="friend-link">godot my husband duh??</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right-aligned clean minimalist back button -->
+    <div class="footer-nav">
+      <a href="index.html" class="back-btn">
+        <i data-lucide="arrow-left" style="width: 14px; height: 14px; color: inherit; margin: 0;"></i>
+        back to apps
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Initialize icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
